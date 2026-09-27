@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大相撲AI勝敗予想</title>
+<meta name="description" content="過去26年・約8万番の取組データで学習したAIが、大相撲幕内の勝敗を毎日予想します。">
+<meta property="og:title" content="大相撲AI勝敗予想 | {{ view.name }}">
+<meta property="og:description" content="AIによる幕内取組の勝敗予想と的中率">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ root }}style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="{{ root }}index.html"><span class="logo-mark">相</span>大相撲AI勝敗予想</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">{% if view.mode == "backtest" %}事後検証{% else %}幕内 勝敗予想{% endif %}</p>
+    <h1>{{ view.name }}</h1>
+    {% if view.n %}
+    <div class="score">
+      <div class="score-main"><span class="num">{{ "%.1f" | format(100 * view.hits / view.n) }}</span><span class="unit">%</span></div>
+      <div class="score-sub">的中率 <strong>{{ view.hits }}</strong> / {{ view.n }} 番</div>
+    </div>
+    {% endif %}
+    {% if view.mode == "backtest" %}
+    <p class="note">この場所はサイト公開前のため、<strong>場所前までのデータだけで学習したモデル</strong>で、各日の取組前の情報だけを使って予想し直した事後検証です。次の場所からは、毎日取組前に予想を公開・保存し、結果が出た後も書き換えません。</p>
+    {% else %}
+    <p class="note">予想は取組発表後、取組の前日に公開・保存しています。結果が出た後に予想を書き換えることはありません。</p>
+    {% endif %}
+  </section>
+
+  {% if view.days %}
+  <nav class="days" aria-label="日付">
+    {% for d in view.days %}
+    <button class="day-tab" data-day="{{ d.day }}" aria-selected="{{ 'true' if loop.last else 'false' }}">
+      <span class="d-label">{{ d.label }}</span>
+      <span class="d-score">{% if d.n %}{{ d.hits }}/{{ d.n }}{% else %}予想{% endif %}</span>
+    </button>
+    {% endfor %}
+  </nav>
+
+  {% for d in view.days %}
+  <section class="day-panel" id="day-{{ d.day }}" {% if not loop.last %}hidden{% endif %}>
+    <div class="day-head">
+      <h2>{{ d.label }}</h2>
+      <p>{% if d.n %}的中 {{ d.hits }} / {{ d.n }} 番{% else %}結果待ち{% endif %}{% if d.predicted_at %} ・ 予想公開 {{ d.predicted_at[:16] | replace("T", " ") }}{% endif %}</p>
+    </div>
+    <div class="legend"><span>東</span><span>AIの勝率予想</span><span>西</span></div>
+    <ol class="bouts">
+      {% for b in d.bouts %}
+      <li class="bout{% if b.hit == true %} is-hit{% elif b.hit == false %} is-miss{% endif %}">
+        <div class="side east{% if b.pick_east %} pick{% endif %}{% if b.winner == 'east' %} won{% elif b.winner == 'west' %} lost{% endif %}">
+          <span class="mark">{% if b.winner == 'east' %}○{% elif b.winner == 'west' %}●{% endif %}</span>
+          <span class="who"><span class="name">{{ b.east }}</span><span class="rank">{{ b.east_rank }}</span></span>
+        </div>
+        <div class="prob">
+          <div class="bar" role="img" aria-label="東 {{ '%d' | format((100 * b.p_east) | round) }}% 西 {{ '%d' | format((100 * b.p_west) | round) }}%">
+            <span class="bar-e" style="width: {{ '%.1f' | format(100 * b.p_east) }}%"></span>
+          </div>
+          <div class="pct"><span>{{ '%d' | format((100 * b.p_east) | round) }}%</span>
+            <span class="verdict">{% if b.fusen %}不戦{% elif b.hit == true %}的中{% elif b.hit == false %}外れ{% endif %}{% if b.kimarite and not b.fusen %}<small>{{ b.kimarite }}</small>{% endif %}</span>
+            <span>{{ '%d' | format((100 * b.p_west) | round) }}%</span></div>
+        </div>
+        <div class="side west{% if not b.pick_east %} pick{% endif %}{% if b.winner == 'west' %} won{% elif b.winner == 'east' %} lost{% endif %}">
+          <span class="who"><span class="name">{{ b.west }}</span><span class="rank">{{ b.west_rank }}</span></span>
+          <span class="mark">{% if b.winner == 'west' %}○{% elif b.winner == 'east' %}●{% endif %}</span>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endfor %}
+  {% endif %}
+
+  <div class="grid">
+  {% if ranking %}
+  <section class="card">
+    <h2>AI番付 <small>強さレーティング上位・{{ ranking_basho }}時点</small></h2>
+    <table class="rank-table">
+      <thead><tr><th>#</th><th>四股名</th><th>番付</th><th>成績</th><th class="r">Elo</th></tr></thead>
+      <tbody>
+      {% for r in ranking %}
+      <tr><td>{{ r.pos }}</td><td class="nm">{{ r.name }}</td><td>{{ r.rank }}</td><td>{{ r.record }}</td><td class="r">{{ r.elo }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+
+  <section class="card">
+    <h2>AIのしくみ</h2>
+    <p>2000年以降の幕内・十両の全取組（約8万番）を時系列に処理し、各取組の<strong>前の時点で分かっていた情報だけ</strong>から特徴量を作ってロジスティック回帰で勝率を推定しています。</p>
+    <ul class="feat">
+      <li><b>Eloレーティング</b> 取組ごとに更新する強さの指標</li>
+      <li><b>番付差</b> 横綱〜十両までの地位の差</li>
+      <li><b>今場所の星</b> その日までの勝ち越し・負け越し状況</li>
+      <li><b>7勝7敗などの星勘定</b> あと1敗で負け越しの力士</li>
+      <li><b>対戦成績・直近30番の調子・前場所の成績・経験</b></li>
+    </ul>
+    {% if metrics %}
+    <h3>精度（直近{{ metrics.test_bashos | length }}場所・{{ metrics.logreg.n }}番で検証）</h3>
+    <table class="metric-table">
+      <tr><th>方法</th><th class="r">的中率</th></tr>
+      <tr class="me"><td>このAI</td><td class="r">{{ "%.1f" | format(100 * metrics.logreg.accuracy) }}%</td></tr>
+      <tr><td>Eloレーティングのみ</td><td class="r">{{ "%.1f" | format(100 * metrics["Eloのみ"].accuracy) }}%</td></tr>
+      <tr><td>番付が上の力士が勝つ</td><td class="r">{{ "%.1f" | format(100 * metrics["番付上位が勝つ"].accuracy) }}%</td></tr>
+    </table>
+    <p class="fine">検証する場所より前のデータだけで学習した結果です。相撲は実力が拮抗した力士同士が組まれるため、60%前後が現実的な上限に近い水準です。</p>
+    {% endif %}
+  </section>
+  </div>
+
+  {% if archive | length > 1 %}
+  <section class="card">
+    <h2>過去の予想</h2>
+    <ul class="archive">
+      {% for a in archive %}
+      <li><a href="{{ root }}basho/{{ a.basho }}.html">{{ a.name }}</a>{% if a.mode == "backtest" %}<span class="tag">事後検証</span>{% endif %}<span>{% if a.n %}{{ "%.1f" | format(100 * a.hits / a.n) }}%（{{ a.hits }}/{{ a.n }}）{% endif %}</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>本サイトの予想は娯楽目的のものです。日本相撲協会とは関係ありません。取組データ: <a href="https://sumo-api.com">sumo-api.com</a></p>
+    <p>最終更新 {{ generated }}</p>
+  </div>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.day-tab');
+  function show(day) {
+    tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.day === day ? 'true' : 'false'));
+    document.querySelectorAll('.day-panel').forEach(p => p.hidden = p.id !== 'day-' + day);
+  }
+  tabs.forEach(t => t.addEventListener('click', () => { show(t.dataset.day); history.replaceState(null, '', '#' + t.dataset.day); }));
+  function fromHash() {
+    const day = location.hash.slice(1);
+    if (day && document.getElementById('day-' + day)) show(day);
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+  const sel = document.querySelector('.day-tab[aria-selected="true"]');
+  if (sel) sel.parentNode.scrollLeft = sel.offsetLeft - sel.parentNode.clientWidth / 2;
+</script>
+</body>
+</html>
