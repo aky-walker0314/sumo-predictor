@@ -2505,6 +2505,191 @@
      "p_east": 0.7244
     }
    ]
+  },
+  "14": {
+   "predicted_at": "2026-11-21T03:42+09:00",
+   "bouts": [
+    {
+     "east_id": 8866,
+     "west_id": 135,
+     "east": "寿之富士",
+     "west": "出羽ノ龍",
+     "east_rank": "東前頭13",
+     "west_rank": "西前頭14",
+     "p_east": 0.5454
+    },
+    {
+     "east_id": 11,
+     "west_id": 378,
+     "east": "一山本",
+     "west": "大青山",
+     "east_rank": "東前頭12",
+     "west_rank": "東前頭17",
+     "p_east": 0.6611
+    },
+    {
+     "east_id": 8858,
+     "west_id": 41,
+     "east": "嵐富士",
+     "west": "王鵬",
+     "east_rank": "東前頭16",
+     "west_rank": "西前頭10",
+     "p_east": 0.4665
+    },
+    {
+     "east_id": 61,
+     "west_id": 14,
+     "east": "欧勝馬",
+     "west": "玉鷲",
+     "east_rank": "東前頭9",
+     "west_rank": "東前頭15",
+     "p_east": 0.5749
+    },
+    {
+     "east_id": 8855,
+     "west_id": 40,
+     "east": "旭海雄",
+     "west": "錦富士",
+     "east_rank": "西前頭16",
+     "west_rank": "西前頭8",
+     "p_east": 0.435
+    },
+    {
+     "east_id": 8,
+     "west_id": 66,
+     "east": "琴勝峰",
+     "west": "北の若",
+     "east_rank": "東前頭6",
+     "west_rank": "西前頭15",
+     "p_east": 0.6887
+    },
+    {
+     "east_id": 22,
+     "west_id": 112,
+     "east": "阿炎",
+     "west": "琴栄峰",
+     "east_rank": "西前頭12",
+     "west_rank": "西前頭6",
+     "p_east": 0.3373
+    },
+    {
+     "east_id": 24,
+     "west_id": 83,
+     "east": "平戸海",
+     "west": "時疾風",
+     "east_rank": "東前頭5",
+     "west_rank": "東前頭14",
+     "p_east": 0.6102
+    },
+    {
+     "east_id": 5,
+     "west_id": 8859,
+     "east": "尊富士",
+     "west": "朝翠龍",
+     "east_rank": "東前頭4",
+     "west_rank": "西前頭13",
+     "p_east": 0.5911
+    },
+    {
+     "east_id": 28,
+     "west_id": 44,
+     "east": "宇良",
+     "west": "高安",
+     "east_rank": "東前頭2",
+     "west_rank": "東前頭3",
+     "p_east": 0.5105
+    },
+    {
+     "east_id": 56,
+     "west_id": 82,
+     "east": "豪ノ山",
+     "west": "藤青雲",
+     "east_rank": "西前頭5",
+     "west_rank": "西前頭2",
+     "p_east": 0.5303
+    },
+    {
+     "east_id": 2,
+     "west_id": 55,
+     "east": "朝乃山",
+     "west": "狼雅",
+     "east_rank": "東前頭1",
+     "west_rank": "東前頭8",
+     "p_east": 0.63
+    },
+    {
+     "east_id": 3,
+     "west_id": 9051,
+     "east": "伯乃富士",
+     "west": "藤凌駕",
+     "east_rank": "西前頭3",
+     "west_rank": "西前頭1",
+     "p_east": 0.4235
+    },
+    {
+     "east_id": 71,
+     "west_id": 9,
+     "east": "美ノ海",
+     "west": "大栄翔",
+     "east_rank": "東小結",
+     "west_rank": "西前頭4",
+     "p_east": 0.535
+    },
+    {
+     "east_id": 607,
+     "west_id": 8857,
+     "east": "朝白龍",
+     "west": "義ノ富士",
+     "east_rank": "西前頭11",
+     "west_rank": "西小結",
+     "p_east": 0.315
+    },
+    {
+     "east_id": 615,
+     "west_id": 37,
+     "east": "藤ノ川",
+     "west": "隆の勝",
+     "east_rank": "東関脇",
+     "west_rank": "東前頭11",
+     "p_east": 0.6504
+    },
+    {
+     "east_id": 8854,
+     "west_id": 13,
+     "east": "安青錦",
+     "west": "若元春",
+     "east_rank": "東大関",
+     "west_rank": "東前頭7",
+     "p_east": 0.6904
+    },
+    {
+     "east_id": 7,
+     "west_id": 74,
+     "east": "霧島",
+     "west": "熱海富士",
+     "east_rank": "東大関",
+     "west_rank": "西関脇",
+     "p_east": 0.5567
+    },
+    {
+     "east_id": 8850,
+     "west_id": 50,
+     "east": "大の里",
+     "west": "金峰山",
+     "east_rank": "東横綱",
+     "west_rank": "西前頭7",
+     "p_east": 0.7737
+    },
+    {
+     "east_id": 20,
+     "west_id": 19,
+     "east": "琴櫻",
+     "west": "豊昇龍",
+     "east_rank": "西大関",
+     "west_rank": "西横綱",
+     "p_east": 0.3974
+    }
+   ]
   }
  }
 }
